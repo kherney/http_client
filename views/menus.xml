@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu Item -->
+    <menuitem id="menu_http_request_wizard"
+              name="HTTP Request"
+              action="action_http_request_wizard"
+              parent="base.menu_custom"
+              sequence="100"/>
+</odoo>

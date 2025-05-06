@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_http_request_wizard_form" model="ir.ui.view">
+        <field name="name">http.request.wizard.form</field>
+        <field name="model">http.request.wizard</field>
+        <field name="arch" type="xml">
+            <form string="HTTP Request">
+                <sheet>
+                    <group>
+                        <!-- Request Section -->
+                        <group string="Request">
+                            <field name="url" placeholder="https://example.com/api"/>
+                            <field name="method"/>
+                            <field name="headers"
+                                   placeholder="Content-Type: application/json&#10;Authorization: Bearer token"
+                                   widget="ace"/>
+                            <field name="params" placeholder="offset=10" invisible="method != 'get'" widget="ace"/>
+                            <field name="body" placeholder="Request body (e.g., JSON data)" widget="ace"/>
+                            <field name="response_text" widget="ace" readonly="1" invisible="response_text"/>
+                        </group>
+                        <!-- Response Section -->
+                        <group string="Response" invisible="not response_status">
+                            <field name="response_status"/>
+                            <field name="content_type"/>
+                            <field name="response_headers" widget="ace" invisible="not response_headers"/>
+                        </group>
+                    </group>
+
+                    <!-- Response Content Notebook -->
+                    <notebook invisible="not response_status">
+                        <page string="Display" name="display">
+                            <field name="response_display" widget="ace" readonly="1"/>
+                        </page>
+                        <page string="JSON" name="json" invisible="not response_json">
+                            <field name="response_json" widget="ace" readonly="1"/>
+                        </page>
+                        <page string="HTML" name="html" invisible="not response_html">
+                            <field name="response_html" readonly="1"/>
+                        </page>
+                        <page string="Text" name="text" invisible="not response_text">
+                            <field name="response_text" widget="ace" readonly="1"/>
+                        </page>
+                        <page string="Binary" name="binary" invisible="not response_binary">
+                            <group>
+                                <field name="response_filename" readonly="1"/>
+                                <field name="response_binary" filename="response_filename" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="make_request" string="Send Request" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_http_request_wizard" model="ir.actions.act_window">
+        <field name="name">HTTP Request</field>
+        <field name="res_model">http.request.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
