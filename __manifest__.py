@@ -61,6 +61,7 @@
 
     'images': ['static/description/banner.png'],
     'demo': [],
+    'test': ['tests'],
     'external_dependencies': {
         'python': ['urllib3'],
     },
