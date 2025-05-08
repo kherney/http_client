@@ -137,6 +137,12 @@ class HTTPAbstract(BaseModel):
         if cls._name in cls._connection_cache:
             cls._connection_cache[cls._name] = None
 
+    def _get_http_connection(self):
+        """Get the HTTP connection options. Avoid accessing the _ http_connection attribute directly."""
+        if not isinstance(self._http_connection, dict):
+            return {}
+        return self._http_connection
+
     def _init_connection(self):
         """Initialize the connection.
 
