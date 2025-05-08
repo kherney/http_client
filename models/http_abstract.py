@@ -117,6 +117,15 @@ class HTTPAbstract(BaseModel):
             raise error_class(f"Unexpected error for {method} {url}", e)
 
     @classmethod
+    def _set_http_connection(cls, values):
+        """
+        Set/Change the HTTP connection options.
+        Avoid using _set_http_connection instead, declare http_connection attribute in class definition.
+        If you require multiple connections, use PoolManagerAbstract"""
+        cls._http_connection = values
+
+
+    @classmethod
     def _register_hook(cls):
         """Initialize connection configurations when the model is registered.
 
@@ -157,6 +166,18 @@ class HTTPAbstract(BaseModel):
 
         return connection
 
+    def _build_headers(self):
+        """
+        Method to be overridden by subclasses.
+        Builds and returns HTTP headers for a connection.
+
+        Returns:
+            dict: A dictionary representing the HTTP headers to be used for the
+                  connection.
+        """
+        headers = self._get_http_connection().get('headers', make_headers(accept_encoding=True))
+        return headers
+
     def _get_options(self) -> Dict:
         """Get default connection options.
 
@@ -166,16 +187,14 @@ class HTTPAbstract(BaseModel):
 
         if not hasattr(self, '_http_connection'):
             raise AttributeError("'_http_connection' attribute not found")
-        if not isinstance(self._http_connection, dict):
-            raise ValueError("'_http_connection' must be a dictionary")
 
         return {
             'timeout': Timeout.DEFAULT_TIMEOUT,
             'maxsize': 1,
             'retries': None,
             'block': False,
-            'headers': None,
-            **self._http_connection,
+            **self._get_http_connection(),
+            'headers': self._build_headers(),
         }
 
     @api.model
@@ -206,9 +225,6 @@ class HTTPAbstract(BaseModel):
             RequestError: If an error occurs during the request
         """
 
-        if headers is None:
-            make_headers(accept_encoding=True)
-
         conn = self._get_connection()
         with self._handle_request_exceptions(method, url):
             return conn.request(method, url, fields=fields, headers=headers, **kwargs)
@@ -232,6 +248,8 @@ class HTTPAbstract(BaseModel):
         conn = self._get_connection()
         with self._handle_request_exceptions(method, url, URLOpenError):
             return conn.urlopen(method, url, body=body, headers=headers, **kwargs)
+
+    # REST methods
 
     def get(self, url, fields=None, headers=None, params=None, **kwargs):
         """Make a GET request.
