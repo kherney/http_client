@@ -14,4 +14,5 @@ from . import (
     exceptions,
     http_connection_pool,
     http_pool_manager,
+    https_pool_web,
 )
