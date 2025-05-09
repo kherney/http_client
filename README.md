@@ -28,7 +28,7 @@ The module is organized into the following components:
     - `HTTPAbstract`: Base abstract class for all HTTP connections
     - `HTTPPoolAbstract`: Abstract class for HTTP connection pools
     - `HTTPSPoolAbstract`: Abstract class for HTTPS connection pools
-  - `HTTPSPoolWeb`: Abstract class for give a models auto-sync the data using https connection pools
+    - `HTTPSPoolWeb`: Abstract class for give a models auto-sync the data using https connection pools
     - `PoolManagerAbstract`: Abstract class for managing multiple connection pools
 
 - **Exceptions**: Custom exceptions for error handling
