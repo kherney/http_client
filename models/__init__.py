@@ -7,6 +7,7 @@ This package contains the models for the HTTP client module:
 - exceptions: Custom exceptions for error handling
 - http_connection_pool: HTTP and HTTPS connection pool implementations
 - http_pool_manager: Pool manager implementation for managing multiple connection pools
+- https_pool_web: Pool manager implementation for auto-sync models web
 """
 
 from . import (
