@@ -177,12 +177,20 @@ class HTTPAbstract(BaseModel):
         Method to be overridden by subclasses.
         Builds and returns HTTP headers for a connection.
 
+        It ensures that authorization headers are included
+        in the resulting set of headers. If the headers already include `Authorization`, it
+        returns the existing headers. Otherwise, additional authentication headers are added.
+
+
         Returns:
             dict: A dictionary representing the HTTP headers to be used for the
                   connection.
         """
         headers = self._get_http_connection().get('headers', make_headers(accept_encoding=True))
-        return headers
+        return {
+            **self.set_auth_headers(),
+            **headers,
+        }
 
     def _get_options(self) -> Dict:
         """Get default connection options.
@@ -234,6 +242,11 @@ class HTTPAbstract(BaseModel):
         conn = self._get_connection()
         with self._handle_request_exceptions(method, url):
             return conn.request(method, url, fields=fields, headers=headers, **kwargs)
+
+    @api.model
+    def set_auth_headers(self):
+        """ Override method for set the auth headers."""
+        return {}
 
     def urlopen(self, method, url, body=None, headers=None, **kwargs):
         """Open a connection to the specified URL.
