@@ -116,7 +116,7 @@ class TestHttpAbstractClasses(TransactionCase):
 
         # Verify that we can switch back to the first host with its specific headers
         response = self.pool_manager.get('https://httpbin.org/headers', headers=httpbin_headers)
-        self.assertEqual(response.status, 300)
+        self.assertEqual(response.status, 200)
         data = json.loads(response.data.decode('utf-8'))
         self.assertEqual(data['headers']['X-Custom-Header'], 'httpbin-value')
 
