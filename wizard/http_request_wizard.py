@@ -121,6 +121,8 @@ class HttpRequestWizard(models.TransientModel):
             if '/' in url and url.index('/') > 0:
                 path = '/' + url.split('/', 1)[1]
 
+            self._pre_request_hook()
+
             # Make the request
             response = self.request(
                 method=self.method,
@@ -202,6 +204,8 @@ class HttpRequestWizard(models.TransientModel):
                         self.response_binary = base64.b64encode(data)
                         self.response_filename = "response"
 
+            self._post_request_hook()
+
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'http.request.wizard',
@@ -221,3 +225,12 @@ class HttpRequestWizard(models.TransientModel):
                 'target': 'new',
                 'context': self.env.context,
             }
+
+
+    def _pre_request_hook(self):
+        """Hook to execute before sending the request"""
+        pass
+
+    def _post_request_hook(self):
+        """Hook to execute after receiving the response"""
+        pass
