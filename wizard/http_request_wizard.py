@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import Dict
 
 from odoo import models, fields, api
 import json
@@ -121,7 +122,10 @@ class HttpRequestWizard(models.TransientModel):
             if '/' in url and url.index('/') > 0:
                 path = '/' + url.split('/', 1)[1]
 
-            self._pre_request_hook()
+            # Prevent make a request if _pre_request_hook return action to execute
+            action = self._pre_request_hook()
+            if action and isinstance(action, dict):
+                return action
 
             # Make the request
             response = self.request(
@@ -227,10 +231,10 @@ class HttpRequestWizard(models.TransientModel):
             }
 
 
-    def _pre_request_hook(self):
+    def _pre_request_hook(self) -> Dict:
         """Hook to execute before sending the request"""
-        pass
+        return {}
 
-    def _post_request_hook(self):
+    def _post_request_hook(self) -> None:
         """Hook to execute after receiving the response"""
         pass
