@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <form string="HTTP Request">
                 <sheet>
-                    <group>
+                    <group name="row">
                         <!-- Request Section -->
                         <group string="Request">
                             <field name="url" placeholder="https://example.com/api"/>

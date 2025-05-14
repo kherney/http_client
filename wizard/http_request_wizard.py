@@ -5,7 +5,6 @@ from odoo import models, fields, api
 import json
 import base64
 import mimetypes
-from ..models.http_connection_pool import HTTPSPoolAbstract
 
 
 class HttpRequestWizard(models.TransientModel):
